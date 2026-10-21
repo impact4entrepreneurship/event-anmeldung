@@ -181,3 +181,29 @@ export const slugify = (s) =>
   String(s ?? '').toLowerCase()
     .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
     .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'veranstaltung';
+
+// Übersetzt Fehler von Supabase Auth in verständliches Deutsch und nennt bei Passwörtern
+// die tatsächlich verletzte Regel (Länge, Zeichenarten, bekannte Datenlecks).
+export const germanAuthError = (err) => {
+  const msg = String(err?.message ?? '');
+  const reasons = err?.reasons ?? [];
+  if (/Invalid login credentials/i.test(msg)) return 'E-Mail oder Passwort stimmt nicht.';
+  if (/already registered/i.test(msg)) return 'Mit dieser E-Mail gibt es schon ein Konto. Bitte melden Sie sich an.';
+  if (/Email not confirmed/i.test(msg)) return 'Bitte bestätigen Sie zuerst Ihre E-Mail-Adresse (Link in der Bestätigungsmail).';
+  if (/different from the old password/i.test(msg)) return 'Das neue Passwort muss sich vom alten unterscheiden.';
+  if (err?.code === 'weak_password' || /^Password should/i.test(msg)) {
+    if (reasons.includes('pwned')) return 'Dieses Passwort ist aus bekannten Datenlecks bekannt. Bitte wählen Sie ein anderes.';
+    const n = msg.match(/at least (\d+) characters/i);
+    if (reasons.includes('length') || n) return `Das Passwort ist zu kurz (mindestens ${n ? n[1] : 8} Zeichen).`;
+    if (/at least one character of each/i.test(msg)) {
+      const kinds = [];
+      if (/abcdefghijklmnopqrstuvwxyz/.test(msg)) kinds.push('Kleinbuchstaben');
+      if (/ABCDEFGHIJKLMNOPQRSTUVWXYZ/.test(msg)) kinds.push('Großbuchstaben');
+      if (/0123456789/.test(msg)) kinds.push('Ziffern');
+      if (/[!@#$%^&*]/.test(msg)) kinds.push('Sonderzeichen');
+      return `Das Passwort muss jeweils mindestens eines enthalten: ${kinds.join(', ')}.`;
+    }
+    return 'Das Passwort erfüllt die Sicherheitsregeln nicht. Bitte wählen Sie ein längeres, vielfältigeres Passwort.';
+  }
+  return 'Das hat nicht geklappt: ' + msg;
+};

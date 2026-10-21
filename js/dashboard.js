@@ -1,16 +1,8 @@
 import { sb } from './supabase.js';
-import { daysUntil, countGuests, escapeHtml } from './lib.js';
+import { daysUntil, countGuests, escapeHtml, germanAuthError } from './lib.js';
 
 const $ = (id) => document.getElementById(id);
 let signUpMode = false;
-
-const MESSAGES = {
-  'Invalid login credentials': 'E-Mail oder Passwort stimmt nicht.',
-  'User already registered': 'Mit dieser E-Mail gibt es schon ein Konto. Bitte melden Sie sich an.',
-  'Email not confirmed': 'Bitte bestätigen Sie zuerst Ihre E-Mail-Adresse (Link in der Bestätigungsmail).',
-};
-const german = (m) => MESSAGES[m] ?? (/at least 6|at least 8|Password should/i.test(m)
-  ? 'Das Passwort ist zu kurz (mindestens 8 Zeichen).' : 'Das hat nicht geklappt: ' + m);
 
 function showMsg(text, ok = false) {
   const el = $('login-msg');
@@ -35,7 +27,7 @@ function bindLogin() {
     const email = $('email').value.trim();
     if (!email) return showMsg('Bitte tragen Sie oben Ihre E-Mail-Adresse ein.');
     const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.href.split('#')[0] });
-    showMsg(error ? german(error.message) : 'Wir haben Ihnen eine E-Mail zum Zurücksetzen geschickt.', !error);
+    showMsg(error ? germanAuthError(error) : 'Wir haben Ihnen eine E-Mail zum Zurücksetzen geschickt.', !error);
   };
   $('login-form').onsubmit = async (e) => {
     e.preventDefault();
@@ -47,7 +39,7 @@ function bindLogin() {
       ? await sb.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split('#')[0] } })
       : await sb.auth.signInWithPassword({ email, password });
     $('login-submit').disabled = false;
-    if (error) return showMsg(german(error.message));
+    if (error) return showMsg(germanAuthError(error));
     if (signUpMode && !data.session) {
       return showMsg('Fast geschafft: Wir haben Ihnen eine E-Mail zur Bestätigung geschickt.', true);
     }
@@ -128,7 +120,7 @@ function bindRecovery() {
     }
     const { error } = await sb.auth.updateUser({ password: pw });
     if (error) {
-      msg.textContent = german(error.message);
+      msg.textContent = germanAuthError(error);
       msg.hidden = false;
       return;
     }
