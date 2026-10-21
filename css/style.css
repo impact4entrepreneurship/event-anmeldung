@@ -111,8 +111,8 @@ table.list { width: 100%; border-collapse: collapse; background: var(--karte); b
 
 /* Gästeseite */
 .cover {
-  min-height: 220px; background: linear-gradient(135deg, var(--akzent-hell), var(--akzent) 60%, #6f5236);
-  background-size: cover; background-position: center; display: flex; align-items: flex-end; color: #fff;
+  min-height: clamp(240px, 42vw, 400px); background: linear-gradient(135deg, var(--akzent-hell), var(--akzent) 60%, #6f5236);
+  background-size: cover; background-position: center 25%; display: flex; align-items: flex-end; color: #fff;
 }
 .cover-inner { max-width: 640px; width: 100%; margin: 0 auto; padding: 24px 16px; }
 .cover h1 { color: #fff; margin: 0; text-shadow: 0 1px 12px rgba(0,0,0,.35); }
