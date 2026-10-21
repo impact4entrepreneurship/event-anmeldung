@@ -1,5 +1,5 @@
 import { sb } from './supabase.js';
-import { daysUntil, countGuests, escapeHtml, germanAuthError } from './lib.js';
+import { daysUntil, countGuests, germanAuthError, eventCardHtml } from './lib.js';
 
 const $ = (id) => document.getElementById(id);
 let signUpMode = false;
@@ -47,18 +47,6 @@ function bindLogin() {
   };
 }
 
-function dueLabel(ev) {
-  const d = daysUntil(ev);
-  if (d < 0) return 'vorbei';
-  if (d === 0) return 'heute';
-  if (d === 1) return 'morgen';
-  return `in ${d} Tagen`;
-}
-
-const dateDe = (ev) => new Date(ev.date + 'T12:00:00Z').toLocaleDateString('de-DE', {
-  weekday: 'short', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
-});
-
 async function renderList(userId) {
   // Veranstaltungen sind für Gäste öffentlich lesbar – das Dashboard zeigt nur die eigenen.
   const [evRes, gRes] = await Promise.all([
@@ -83,17 +71,9 @@ async function renderList(userId) {
   }
   const upcoming = mine.filter((e) => daysUntil(e) >= 0);
   const past = mine.filter((e) => daysUntil(e) < 0).reverse();
-  $('list').innerHTML = [...upcoming, ...past].map((ev) => {
-    const { confirmed, maybe } = countGuests(byEvent.get(ev.id) ?? []);
-    const pct = ev.capacity ? Math.min(100, Math.round((confirmed / ev.capacity) * 100)) : 0;
-    const places = ev.capacity ? `${confirmed} von ${ev.capacity} Plätzen` : `${confirmed} zugesagt`;
-    return `<a class="card" href="event.html?id=${encodeURIComponent(ev.id)}">
-      <div class="row" style="align-items:baseline"><h2 style="margin:0">${escapeHtml(ev.title)}</h2>
-        <span class="pill">${dueLabel(ev)}</span></div>
-      <div class="muted small">${escapeHtml(dateDe(ev))}, ${escapeHtml(ev.time.slice(0, 5))} Uhr · ${escapeHtml(ev.location)}</div>
-      ${ev.capacity ? `<div class="bar"><i style="width:${pct}%"></i></div>` : '<div style="height:10px"></div>'}
-      <div class="row"><span>${places}</span><span>${maybe ? maybe + ' vielleicht' : ''}</span></div></a>`;
-  }).join('');
+  $('list').innerHTML = [...upcoming, ...past]
+    .map((ev) => eventCardHtml(ev, countGuests(byEvent.get(ev.id) ?? [])))
+    .join('');
 }
 
 // Passwort zurücksetzen: Der Link in der Mail meldet mit einer Wiederherstellungs-Sitzung an;

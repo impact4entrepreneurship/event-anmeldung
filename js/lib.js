@@ -207,3 +207,34 @@ export const germanAuthError = (err) => {
   }
   return 'Das hat nicht geklappt: ' + msg;
 };
+
+const dueLabel = (ev) => {
+  const d = daysUntil(ev);
+  if (d < 0) return 'vorbei';
+  if (d === 0) return 'heute';
+  if (d === 1) return 'morgen';
+  return `in ${d} Tagen`;
+};
+
+// Karte für das Dashboard: Hauptbereich führt zur Gästeliste, darunter ein eigener
+// Bearbeiten-Knopf (zwei getrennte Links, nie ineinander verschachtelt).
+export const eventCardHtml = (ev, { confirmed, maybe }) => {
+  const id = encodeURIComponent(ev.id);
+  const dateDe = new Date(ev.date + 'T12:00:00Z').toLocaleDateString('de-DE', {
+    weekday: 'short', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+  });
+  const pct = ev.capacity ? Math.min(100, Math.round((confirmed / ev.capacity) * 100)) : 0;
+  const places = ev.capacity ? `${confirmed} von ${ev.capacity} Plätzen` : `${confirmed} zugesagt`;
+  return `<div class="card event-card">
+    <a class="card-link" href="event.html?id=${id}">
+      <div class="row" style="align-items:baseline"><h2 style="margin:0">${escapeHtml(ev.title)}</h2>
+        <span class="pill">${dueLabel(ev)}</span></div>
+      <div class="muted small">${escapeHtml(dateDe)}, ${escapeHtml(ev.time.slice(0, 5))} Uhr · ${escapeHtml(ev.location)}</div>
+      ${ev.capacity ? `<div class="bar"><i style="width:${pct}%"></i></div>` : '<div style="height:10px"></div>'}
+      <div class="row"><span>${places}</span><span>${maybe ? maybe + ' vielleicht' : ''}</span></div>
+    </a>
+    <div class="btn-row" style="margin-top:12px">
+      <a class="btn small" href="event-neu.html?id=${id}">Bearbeiten</a>
+    </div>
+  </div>`;
+};
