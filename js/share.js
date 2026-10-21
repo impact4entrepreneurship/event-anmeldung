@@ -44,8 +44,14 @@ export async function renderShare(el, ev) {
   drawQr(canvas, link);
   const note = el.querySelector('[data-role=feedback]');
   el.querySelector('[data-act=copy]').onclick = async () => {
-    try { await navigator.clipboard.writeText(link); note.textContent = 'Link kopiert.'; }
-    catch { el.querySelector('input').select(); note.textContent = 'Bitte mit Strg/Cmd + C kopieren.'; }
+    const input = el.querySelector('input');
+    input.focus();
+    input.select();
+    input.setSelectionRange(0, link.length);
+    let ok = false;
+    try { await navigator.clipboard.writeText(link); ok = true; } catch { /* Fallback unten */ }
+    if (!ok) { try { ok = document.execCommand('copy'); } catch { ok = false; } }
+    note.textContent = ok ? 'Link kopiert.' : 'Der Link ist markiert. Bitte mit Strg/Cmd + C kopieren.';
   };
   el.querySelector('[data-act=png]').onclick = () => {
     const a = document.createElement('a');
