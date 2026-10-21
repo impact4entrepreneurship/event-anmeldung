@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gästeliste</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">← Veranstaltungen</a>
+    </div>
+  </header>
+  <main class="container" style="padding-top:24px">
+    <div id="notfound" class="card" hidden><h2>Nicht gefunden</h2>
+      <p class="muted">Diese Veranstaltung gibt es nicht oder sie gehört Ihnen nicht.</p></div>
+
+    <div id="content" hidden>
+      <h1 id="ev-title" style="margin-bottom:4px"></h1>
+      <p class="muted" id="ev-meta" style="margin-top:0"></p>
+      <div class="btn-row" style="margin-bottom:16px">
+        <a class="btn" id="edit" href="#">Bearbeiten</a>
+        <button class="btn" id="share-open" type="button">Link &amp; QR-Code</button>
+        <button class="btn" id="remind" type="button">Erinnerung kopieren</button>
+        <button class="btn" id="csv" type="button">Als CSV laden</button>
+      </div>
+      <p class="small muted" id="feedback" aria-live="polite" style="min-height:1.4em;margin:0 0 8px"></p>
+
+      <div class="stats">
+        <div class="stat"><b id="n-confirmed">0</b>Zugesagt</div>
+        <div class="stat"><b id="n-maybe">0</b>Vielleicht</div>
+        <div class="stat"><b id="n-total">0</b><span id="cap-label">Gesamt</span></div>
+      </div>
+
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Suche nach Name oder E-Mail" aria-label="Suche">
+        <select id="filter" aria-label="Status filtern">
+          <option value="">Alle</option>
+          <option value="confirmed">Zugesagt</option>
+          <option value="maybe">Vielleicht</option>
+          <option value="cancelled">Abgesagt</option>
+        </select>
+      </div>
+      <div id="table"></div>
+    </div>
+
+    <dialog id="share-dialog">
+      <h2>Link &amp; QR-Code</h2>
+      <div id="share"></div>
+      <div class="btn-row" style="margin-top:14px"><button class="btn" id="share-close" type="button">Schließen</button></div>
+    </dialog>
+  </main>
+  <script type="module" src="js/event-admin.js"></script>
+</body>
+</html>

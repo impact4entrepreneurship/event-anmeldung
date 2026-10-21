@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Veranstaltung anlegen</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">← Veranstaltungen</a>
+    </div>
+  </header>
+  <main class="container narrow" style="padding-top:24px">
+    <section id="form-view">
+      <h1 id="page-title">Neue Veranstaltung</h1>
+      <div id="form-msg" class="msg msg-error" hidden></div>
+      <form id="event-form" class="card" novalidate>
+        <label class="field"><span>Titel *</span><input id="title" maxlength="200" required></label>
+        <div class="grid-2">
+          <label class="field"><span>Datum *</span><input id="date" type="date" required></label>
+          <label class="field"><span>Uhrzeit *</span><input id="time" type="time" required></label>
+        </div>
+        <label class="field"><span>Ort *</span><input id="location" maxlength="300" required></label>
+        <div class="field"><span>Beschreibung</span><div id="editor"></div></div>
+        <label class="field"><span>Titelbild (Internetadresse des Bildes)</span>
+          <input id="cover_url" type="url" placeholder="https://…"></label>
+        <div id="cover-preview" class="small muted" style="margin:-6px 0 14px"></div>
+        <label class="field"><span>Maximale Plätze (leer lassen = unbegrenzt)</span>
+          <input id="capacity" type="number" min="1" step="1" inputmode="numeric"></label>
+        <div class="field"><span>Zusatzfragen an die Gäste</span>
+          <label class="check"><input type="checkbox" id="cf-dietary"> Essenswünsche / Unverträglichkeiten</label>
+          <label class="check"><input type="checkbox" id="cf-plus"> Begleitpersonen</label>
+          <label class="check"><input type="checkbox" id="cf-tshirt"> T-Shirt-Größe</label>
+        </div>
+        <button class="btn btn-primary" id="save" type="submit">Veranstaltung speichern</button>
+      </form>
+    </section>
+
+    <section id="done-view" hidden>
+      <h1>Gespeichert!</h1>
+      <p class="muted">Teilen Sie diesen Link oder den QR-Code mit Ihren Gästen.</p>
+      <div class="card" id="share"></div>
+      <a class="btn btn-primary" id="to-guests" href="#">Zur Gästeliste</a>
+    </section>
+  </main>
+  <script type="module" src="js/event-form.js"></script>
+</body>
+</html>

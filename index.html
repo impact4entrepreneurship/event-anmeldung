@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Veranstaltungen – Anmeldung</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="login" hidden>
+    <div class="container narrow" style="padding-top:48px">
+      <h1>Veranstaltungen</h1>
+      <p class="muted">Anmeldungen verwalten für Impact4Entrepreneurship.</p>
+      <form id="login-form" class="card" novalidate>
+        <h2 id="login-title">Anmelden</h2>
+        <div id="login-msg" class="msg msg-error" hidden></div>
+        <label class="field"><span>E-Mail-Adresse</span><input id="email" type="email" autocomplete="email" required></label>
+        <label class="field"><span>Passwort</span><input id="password" type="password" autocomplete="current-password" required minlength="8"></label>
+        <button class="btn btn-primary" id="login-submit" type="submit">Anmelden</button>
+        <p class="small" style="margin:14px 0 0">
+          <a href="#" id="toggle-mode">Noch kein Konto? Konto erstellen</a><br>
+          <a href="#" id="forgot">Passwort vergessen?</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <div id="recovery" hidden>
+    <div class="container narrow" style="padding-top:48px">
+      <h1>Neues Passwort</h1>
+      <form id="recovery-form" class="card" novalidate>
+        <div id="recovery-msg" class="msg msg-error" hidden></div>
+        <label class="field"><span>Neues Passwort (mindestens 8 Zeichen)</span>
+          <input id="new-password" type="password" autocomplete="new-password" minlength="8" required></label>
+        <button class="btn btn-primary" type="submit">Passwort speichern</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="app" hidden>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="index.html">Veranstaltungen</a>
+        <button class="btn" id="logout">Abmelden</button>
+      </div>
+    </header>
+    <main class="container" style="padding-top:24px">
+      <div class="row" style="align-items:center;margin-bottom:16px">
+        <h1 style="margin:0">Meine Veranstaltungen</h1>
+        <a class="btn btn-primary" href="event-neu.html">+ Neue Veranstaltung</a>
+      </div>
+      <div id="list"><p class="muted">Lade …</p></div>
+    </main>
+  </div>
+
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

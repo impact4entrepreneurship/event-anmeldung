@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anmeldung</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+</head>
+<body>
+  <div id="loading" class="container narrow" style="padding-top:48px"><p class="muted">Lade …</p></div>
+
+  <div id="notfound" class="container narrow" style="padding-top:48px" hidden>
+    <div class="card"><h2>Veranstaltung nicht gefunden</h2>
+      <p class="muted">Dieser Link scheint nicht zu stimmen. Bitte prüfen Sie ihn oder fragen Sie bei den Veranstaltern nach.</p></div>
+  </div>
+
+  <div id="page" hidden>
+    <div class="cover" id="cover"><div class="cover-inner"><h1 id="ev-title"></h1></div></div>
+    <main class="container narrow">
+      <div class="meta" id="ev-meta"></div>
+      <div class="rich" id="ev-desc"></div>
+
+      <div id="past" class="msg msg-error" hidden>Diese Veranstaltung ist vorbei. Anmeldungen sind nicht mehr möglich.</div>
+
+      <form id="rsvp-form" class="card" novalidate>
+        <h2>Ihre Anmeldung</h2>
+        <div id="form-msg" class="msg msg-error" hidden></div>
+        <label class="field"><span>Name *</span><input id="name" maxlength="200" autocomplete="name" required></label>
+        <label class="field"><span>E-Mail-Adresse *</span><input id="email" type="email" maxlength="200" autocomplete="email" required></label>
+        <div class="field"><span>Teilnahme *</span>
+          <div class="seg" role="radiogroup">
+            <label><input type="radio" name="status" value="confirmed" checked><span>Ich komme</span></label>
+            <label><input type="radio" name="status" value="maybe"><span>Vielleicht</span></label>
+            <label><input type="radio" name="status" value="cancelled"><span>Ich kann nicht</span></label>
+          </div>
+        </div>
+        <label class="field" id="f-plus" hidden><span>Begleitpersonen (Anzahl)</span>
+          <select id="plus_ones"></select></label>
+        <label class="field" id="f-dietary" hidden><span>Essenswünsche / Unverträglichkeiten</span>
+          <input id="dietary" maxlength="500"></label>
+        <label class="field" id="f-tshirt" hidden><span>T-Shirt-Größe</span>
+          <select id="tshirt"><option value="">Bitte wählen</option>
+            <option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option></select></label>
+        <button class="btn btn-primary" id="send" type="submit" style="width:100%">Anmelden</button>
+        <p class="small muted" style="margin:12px 0 0">Ihre Angaben dienen nur der Planung dieser Veranstaltung.
+          Mehr dazu in der <a href="https://impact4entrepreneurship.org/datenschutz" target="_blank" rel="noopener">Datenschutzerklärung</a>.</p>
+      </form>
+
+      <section id="done" class="card" hidden>
+        <h2 id="done-title"></h2>
+        <p class="muted" id="done-text"></p>
+        <div class="btn-row" id="cal-buttons">
+          <a class="btn btn-primary" id="gcal" target="_blank" rel="noopener">Zu Google Kalender</a>
+          <button class="btn" id="ics" type="button">Zu Apple Kalender (.ics)</button>
+        </div>
+        <p class="small" style="margin-top:14px"><a href="#" id="change">Antwort ändern</a></p>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="js/rsvp.js"></script>
+</body>
+</html>
